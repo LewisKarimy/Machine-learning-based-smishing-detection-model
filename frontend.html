@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smishing Detector</title>
+</head>
+<body>
+    <textarea id="messageInput" placeholder="Enter your message"></textarea>
+    <button onclick="classifyMessage()">Classify</button>
+    <p id="result"></p>
+
+    <script>
+        function classifyMessage() {
+            const messageInput = document.getElementById('messageInput').value;
+
+            if (!messageInput.trim()) {
+                alert('Please enter a message.');
+                return;
+            }
+
+            fetch('http://127.0.0.1:5000/api/classify', { 
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: messageInput }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultElement = document.getElementById('result');
+                resultElement.textContent = `Classification: ${data.result}`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle errors, update the UI accordingly
+            });
+        }
+    </script>
+</body>
+</html>
+
